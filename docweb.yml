@@ -1,0 +1,26 @@
+-  hosts: all
+   tasks:
+   - shell: "yum install docker-ce --nobest -y"
+ 
+   - service:
+       name: "docker"
+       state: started
+
+   - command: "pip3 install docker"
+
+   - community.docker.docker_image:
+       name: "httpd" 
+       source: pull 
+
+   - copy:
+       src: "/root/ansiblews/webpage.html"
+       dest: "/webpages/"
+
+   - community.docker.docker_container:
+       name: "myweb2"
+       image: "httpd"
+       exposed_ports: "80"
+       ports: "8080:80"
+       volumes: "/webpages:/usr/local/apache2/htdocs/"
+ 
+
